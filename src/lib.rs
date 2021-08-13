@@ -1,6 +1,7 @@
 #![doc = include_str!("../README.md")]
 use core::convert::TryFrom;
 use core::fmt;
+use core::str::FromStr;
 
 // Include the build-script generated ProductCategory enum
 include!(concat!(env!("OUT_DIR"), "/enum.rs"));
@@ -14,10 +15,19 @@ use serde::{
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
-    /// Error for when a product category ID does not exist
+    /// Product category ID does not exist
     IdNotFound,
-    /// Error for when a product category name does not exist
+    /// Product category name does not exist
     NameNotFound,
+}
+
+
+impl FromStr for ProductCategory {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_name(s)
+    }
 }
 
 impl fmt::Display for Error {
@@ -250,6 +260,18 @@ mod tests {
     fn test_serde_serialize() {
         let serialized = serde_json::to_string(&ProductCategory::ApparelAndAccessories).unwrap();
         assert_eq!(serialized, "\"Apparel & Accessories\"");
+    }
+
+    #[test]
+    fn implements_from_str() {
+        use std::str::FromStr;
+        assert_eq!(ProductCategory::from_str("Animals & Pet Supplies"), Ok(ProductCategory::AnimalsAndPetSupplies));
+        assert_eq!(ProductCategory::from_str("Arts & Entertainment > Event Tickets"), Ok(ProductCategory::ArtsAndEntertainmentEventTickets));
+        assert_eq!(ProductCategory::from_str(
+            "Arts & Entertainment > Hobbies & Creative Arts > Musical Instrument & Orchestra Accessories > Woodwind Instrument Accessories > Saxophone Accessories > Saxophone Parts > Saxophone Mouthpieces"),
+            Ok(ProductCategory::ArtsAndEntertainmentHobbiesAndCreativeArtsMusicalInstrumentAndOrchestraAccessoriesWoodwindInstrumentAccessoriesSaxophoneAccessoriesSaxophonePartsSaxophoneMouthpieces),
+        );
+        assert_eq!(ProductCategory::from_str("Some Nonexistent Category"), Err(Error::NameNotFound));
     }
 }
 
