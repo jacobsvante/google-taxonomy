@@ -225,18 +225,12 @@ mod tests {
 
     #[test]
     fn positive_id_not_found_error() {
-        assert_eq!(
-            ProductCategory::try_from(u32::MAX),
-            Err(Error::IdNotFound)
-        );
+        assert_eq!(ProductCategory::try_from(u32::MAX), Err(Error::IdNotFound));
     }
 
     #[test]
     fn negative_id_not_found_error() {
-        assert_eq!(
-            ProductCategory::try_from(-1),
-            Err(Error::IdNotFound)
-        );
+        assert_eq!(ProductCategory::try_from(-1), Err(Error::IdNotFound));
     }
 
     #[test]

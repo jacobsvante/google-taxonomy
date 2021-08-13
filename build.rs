@@ -72,7 +72,7 @@ fn write_enum(
     writeln!(file, "            _ => Err(Error::IdNotFound)")?;
     writeln!(file, "        }}")?;
     writeln!(file, "    }}")?;
-    writeln!(file, "")?;
+    writeln!(file)?;
     writeln!(file, "    pub fn from_name(name: &str) -> Result<Self, Error> {{")?;
     writeln!(file, "        match name {{")?;
     for entry in entries.iter() {
