@@ -160,8 +160,11 @@ mod tests {
 
     #[test]
     fn id_to_enum() {
-        let cat: ProductCategory = 3237.try_into().unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat: ProductCategory = 499972.try_into().unwrap();
+        assert_eq!(
+            cat,
+            ProductCategory::ApparelAndAccessoriesClothingAccessoriesSashes
+        );
     }
 
     #[test]
@@ -172,20 +175,20 @@ mod tests {
 
     #[test]
     fn id_u16_to_enum() {
-        let cat = ProductCategory::try_from(3237_u16).unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat = ProductCategory::try_from(111_u16).unwrap();
+        assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
     fn id_u32_to_enum() {
-        let cat = ProductCategory::try_from(3237_u32).unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat = ProductCategory::try_from(111_u32).unwrap();
+        assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
     fn id_u64_to_enum() {
-        let cat = ProductCategory::try_from(3237_u64).unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat = ProductCategory::try_from(111_u64).unwrap();
+        assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
@@ -202,20 +205,20 @@ mod tests {
 
     #[test]
     fn id_i16_to_enum() {
-        let cat = ProductCategory::try_from(3237_i16).unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat = ProductCategory::try_from(111_i16).unwrap();
+        assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
     fn id_i32_to_enum() {
-        let cat = ProductCategory::try_from(3237_i32).unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat = ProductCategory::try_from(111_i32).unwrap();
+        assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
     fn id_i64_to_enum() {
-        let cat = ProductCategory::try_from(3237_i64).unwrap();
-        assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
+        let cat = ProductCategory::try_from(111_i64).unwrap();
+        assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
@@ -226,7 +229,7 @@ mod tests {
 
     #[test]
     fn positive_id_not_found_error() {
-        assert_eq!(ProductCategory::try_from(u32::MAX), Err(Error::IdNotFound));
+        assert_eq!(ProductCategory::try_from(u64::MAX), Err(Error::IdNotFound));
     }
 
     #[test]
