@@ -50,7 +50,6 @@ fn write_enum(
     file: &mut BufWriter<File>,
     entries: &[RawProductCategory],
 ) -> Result<(), std::io::Error> {
-    writeln!(file, "/// ")?;
     writeln!(file, "#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]")?;
     writeln!(file, "pub enum ProductCategory {{")?;
     for entry in entries.iter() {
