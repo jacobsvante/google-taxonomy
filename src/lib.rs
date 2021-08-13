@@ -2,6 +2,9 @@
 use core::convert::TryFrom;
 use core::fmt;
 
+// Include the build-script generated ProductCategory enum
+include!(concat!(env!("OUT_DIR"), "/enum.rs"));
+
 #[cfg(feature = "with-serde")]
 use serde::{
     de::{self, Deserializer},
@@ -133,8 +136,6 @@ impl Serialize for ProductCategory {
         serializer.serialize_str(&self.to_string())
     }
 }
-
-include!(concat!(env!("OUT_DIR"), "/enum.rs"));
 
 #[cfg(test)]
 mod tests {
