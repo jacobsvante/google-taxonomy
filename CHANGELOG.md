@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.2](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.2.1...v0.2.2) (2021-08-13)
+
+
+### Documentation
+
+* Correct repository+homepage URL ([e9f7de5](https://www.github.com/jmagnusson/google-taxonomy/commit/e9f7de567a79fad9e12b2b319814455bfcc5bd68))
+
 ### [0.2.1](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.2.0...v0.2.1) (2021-08-13)
 
 
