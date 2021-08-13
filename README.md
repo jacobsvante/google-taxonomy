@@ -28,7 +28,7 @@ use google_taxonomy::ProductCategory;
 assert_eq!(ProductCategory::AnimalsAndPetSuppliesLiveAnimals.to_string(), "Animals & Pet Supplies > Live Animals");
 ```
 
-### Serialize
+### Serialize / deserialize with Serde
 
 ```rust
 #[cfg(feature = "with-serde")]
