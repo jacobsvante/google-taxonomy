@@ -108,12 +108,14 @@ jobs:
           git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
       -
         name: Make cargo command available
+        if: ${{ steps.release.outputs.release_created }}
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
       -
         name: Publish to Crates.io
+        if: ${{ steps.release.outputs.release_created }}
         uses: katyo/publish-crates@v1
         with:
           registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
