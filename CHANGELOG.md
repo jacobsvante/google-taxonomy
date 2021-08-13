@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.1](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.2.0...v0.2.1) (2021-08-13)
+
+
+### Continuous Integration
+
+* Add the actual publish step ([b45aa9f](https://www.github.com/jmagnusson/google-taxonomy/commit/b45aa9f520e43f99e6bbc441212a2797f6ba3783))
+
 ## [0.2.0](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.1.1...v0.2.0) (2021-08-13)
 
 
