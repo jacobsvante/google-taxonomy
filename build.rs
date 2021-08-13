@@ -48,57 +48,51 @@ fn parse() -> Vec<RawProductCategory> {
 #[rustfmt::skip]
 fn write_enum(
     file: &mut BufWriter<File>,
-    entries: &[RawProductCategory],
+    entries: &mut [RawProductCategory],
 ) -> Result<(), std::io::Error> {
-    writeln!(file, "#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]")?;
-    writeln!(file, "pub enum ProductCategory {{")?;
+    entries.sort_by(|a, b| a.name.cmp(&b.name) );
+    writeln!(file, "    pub static ALL_NAME_SORTED: [ProductCategory; {}] = [", entries.len())?;
     for entry in entries.iter() {
-        writeln!(file, "    {} = {},", &entry.variant_name(), &entry.id)?;
+        writeln!(file, "        ProductCategory::{},", &entry.variant_name())?;
+    }
+    writeln!(file, "    ];")?;
+    entries.sort_by(|a, b| a.id.cmp(&b.id) );
+    writeln!(file, "#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]")?;
+    writeln!(file, "pub struct ProductCategory {{ id: u32, name: &'static str, variant_name: &'static str }}")?;
+    writeln!(file, "impl ProductCategory {{")?;
+    writeln!(file, "    pub const ALL: [ProductCategory; {}] = [", entries.len())?;
+    for entry in entries.iter() {
+        writeln!(file, "        ProductCategory::{},", &entry.variant_name())?;
+    }
+    writeln!(file, "    ];")?;
+    for entry in entries.iter() {
+        writeln!(file, "    #[allow(nonstandard_style)]")?;
+        writeln!(file, "    pub const {}: ProductCategory = ProductCategory {{ id: {}, name: \"{}\", variant_name: \"{}\" }};", &entry.variant_name(), &entry.id, &entry.name, &entry.variant_name())?;
     }
     writeln!(file, "}}")?;
     writeln!(file)?;
     writeln!(file, "impl ProductCategory {{")?;
-    writeln!(file, "    pub fn from_id(id: u32) -> Result<Self, Error> {{")?;
-    writeln!(file, "        match id {{")?;
-    for entry in entries.iter() {
-        writeln!(
-            file,
-            "            {} => Ok(Self::{}),",
-            entry.id,
-            entry.variant_name()
-        )?;
-    }
-    writeln!(file, "            _ => Err(Error::IdNotFound)")?;
-    writeln!(file, "        }}")?;
+    writeln!(file, "    pub fn id(&self) -> u32 {{")?;
+    writeln!(file, "        self.id")?;
     writeln!(file, "    }}")?;
-    writeln!(file)?;
+    writeln!(file, "    pub fn name(&self) -> &str {{")?;
+    writeln!(file, "        self.name")?;
+    writeln!(file, "    }}")?;
+    writeln!(file, "    pub fn from_id(id: u32) -> Result<Self, Error> {{")?;
+    writeln!(file, "        Self::ALL.binary_search_by_key(&id, |a| a.id).map(|idx| Self::ALL[idx].clone()).map_err(|_| Error::IdNotFound)")?;
+    writeln!(file, "    }}")?;
     writeln!(file, "    pub fn from_name(name: &str) -> Result<Self, Error> {{")?;
-    writeln!(file, "        match name {{")?;
-    for entry in entries.iter() {
-        writeln!(
-            file,
-            "            \"{}\" => Ok(Self::{}),",
-            entry.name,
-            entry.variant_name()
-        )?;
-    }
-    writeln!(file, "            _ => Err(Error::NameNotFound)")?;
-    writeln!(file, "        }}")?;
+    writeln!(file, "        ALL_NAME_SORTED.binary_search_by_key(&name, |a| a.name).map(|idx| ALL_NAME_SORTED[idx].clone()).map_err(|_| Error::NameNotFound)")?;
     writeln!(file, "    }}")?;
     writeln!(file, "}}")?;
     writeln!(file, "impl fmt::Display for ProductCategory {{")?;
     writeln!(file, "    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {{")?;
-    writeln!(file, "        let x = match self {{")?;
-    for entry in entries.iter() {
-        writeln!(
-            file,
-            "            Self::{} => \"{}\",",
-            &entry.variant_name(),
-            &entry.name
-        )?;
-    }
-    writeln!(file, "        }};")?;
-    writeln!(file, "        write!(f, \"{{}}\", x)")?;
+    writeln!(file, "        write!(f, \"{{}}\", self.name)")?;
+    writeln!(file, "    }}")?;
+    writeln!(file, "}}")?;
+    writeln!(file, "impl fmt::Debug for ProductCategory {{")?;
+    writeln!(file, "    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {{")?;
+    writeln!(file, "        write!(f, \"{{}}\", self.variant_name)")?;
     writeln!(file, "    }}")?;
     writeln!(file, "}}")?;
     Ok(())
@@ -106,8 +100,8 @@ fn write_enum(
 
 fn main() -> Result<(), std::io::Error> {
     let out_path = Path::new(&env::var("OUT_DIR").unwrap()).join("enum.rs");
-    let entries = parse();
+    let mut entries = parse();
     let mut file = BufWriter::new(File::create(&out_path).expect("Couldn't write to output file"));
-    write_enum(&mut file, &entries)?;
+    write_enum(&mut file, &mut entries)?;
     Ok(())
 }

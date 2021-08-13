@@ -154,7 +154,7 @@ mod tests {
     #[test]
     fn casts_to_category_id() {
         assert_eq!(
-            ProductCategory::AnimalsAndPetSuppliesLiveAnimals as u32,
+            ProductCategory::AnimalsAndPetSuppliesLiveAnimals.id,
             3237
         );
     }
@@ -280,6 +280,18 @@ mod tests {
             ProductCategory::from_str("Some Nonexistent Category"),
             Err(Error::NameNotFound)
         );
+    }
+
+    #[test]
+    fn do_the_thing() {
+        let id = 151515;
+        let mut foo = None;
+        for var in &ProductCategory::ALL {
+            if var.id == id {
+                foo = Some(var);
+            }
+        }
+        assert_eq!(foo, None);
     }
 }
 
