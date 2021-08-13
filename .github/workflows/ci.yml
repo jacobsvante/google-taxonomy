@@ -67,7 +67,7 @@ jobs:
 
   create-release-pr:
     name: Conditionally create release PR
-    needs: [build, clippy, cargo-deny, test]
+    needs: [clippy, cargo-deny, test]
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
