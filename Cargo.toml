@@ -5,9 +5,9 @@ version = "0.2.1"
 license = "MIT"
 edition = "2018"
 authors = ["Jacob Magnusson <m@jacobian.se>"]
-repository = "https://github.com/jmagnusson/google_taxonomy"
+repository = "https://github.com/jmagnusson/google-taxonomy"
 documentation = "https://docs.rs/google_taxonomy/"
-homepage = "https://github.com/jmagnusson/google_taxonomy"
+homepage = "https://github.com/jmagnusson/google-taxonomy"
 readme = "README.md"
 keywords = ["google", "taxonomy"]
 
