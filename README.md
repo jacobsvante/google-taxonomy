@@ -3,15 +3,26 @@
 The purpose of this crate is to more easily work with [Google Product Categories / Taxonomy](https://support.google.com/merchants/answer/6324436).
 This is provided via the `google_taxonomy::ProductCategory` enum which contains all categories that exist as of 2021-08-13.
 
+## Enum variants, naming & discriminant
+
+Variant names are translated from the [taxonomy-with-ids.en-US.txt](https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt) file as follows:
+1. The leading ID is removed and used as [discriminant](https://doc.rust-lang.org/reference/items/enumerations.html#custom-discriminant-values-for-fieldless-enumerations) for the enum variant.
+2. The immediately following characters ` - ` are removed
+3. All occurrences of `&` are replaced with `And`
+4. Non-alphanumeric ascii characters are removed
+
+For example `1604 - Apparel & Accessories > Clothing` becomes `ApparelAndAccessoriesClothing`.
+
+The discriminant is represented as a `u32` internally.
+
 ## Examples
 
-### From
+### Try to parse an integer as a product category (i.e. from its ID)
 
 ```rust
 use std::convert::TryInto;
 use google_taxonomy::ProductCategory;
 
-// Try to parse an integer as a product category (i.e. from its ID)
 let cat: ProductCategory = 3237.try_into().unwrap();
 assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
 ```
