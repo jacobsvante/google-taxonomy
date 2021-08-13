@@ -3,8 +3,37 @@ use core::convert::TryFrom;
 use core::fmt;
 use core::str::FromStr;
 
-// Include the build-script generated ProductCategory enum
+// Include the build-script generated mappings
 include!(concat!(env!("OUT_DIR"), "/enum.rs"));
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ProductCategory(u16);
+
+impl ProductCategory {
+    pub fn name(&self) -> &'static str {
+        DATA[self.0 as usize].1
+    }
+    pub fn id(&self) -> u32 {
+        DATA[self.0 as usize].0
+    }
+    pub fn from_id(id: u32) -> Result<Self, Error> {
+        DATA_SORTED_BY_ID
+            .binary_search_by_key(&id, |t| t.0)
+            .map(|i| Self(DATA_SORTED_BY_ID[i].1))
+            .map_err(|_| Error::IdNotFound)
+    }
+    pub fn from_name(name: &str) -> Result<Self, Error> {
+        DATA.binary_search_by_key(&name, |t| t.1)
+            .map(|n| Self(n as u16))
+            .map_err(|_| Error::NameNotFound)
+    }
+}
+
+impl fmt::Display for ProductCategory {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.name().fmt(f)
+    }
+}
 
 #[cfg(feature = "with-serde")]
 use serde::{
@@ -153,10 +182,7 @@ mod tests {
 
     #[test]
     fn casts_to_category_id() {
-        assert_eq!(
-            ProductCategory::AnimalsAndPetSuppliesLiveAnimals as u32,
-            3237
-        );
+        assert_eq!(ProductCategory::AnimalsAndPetSuppliesLiveAnimals.id(), 3237);
     }
 
     #[test]
