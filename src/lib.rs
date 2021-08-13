@@ -21,7 +21,6 @@ pub enum Error {
     NameNotFound,
 }
 
-
 impl FromStr for ProductCategory {
     type Err = Error;
 
@@ -265,13 +264,22 @@ mod tests {
     #[test]
     fn implements_from_str() {
         use std::str::FromStr;
-        assert_eq!(ProductCategory::from_str("Animals & Pet Supplies"), Ok(ProductCategory::AnimalsAndPetSupplies));
-        assert_eq!(ProductCategory::from_str("Arts & Entertainment > Event Tickets"), Ok(ProductCategory::ArtsAndEntertainmentEventTickets));
+        assert_eq!(
+            ProductCategory::from_str("Animals & Pet Supplies"),
+            Ok(ProductCategory::AnimalsAndPetSupplies)
+        );
+        assert_eq!(
+            ProductCategory::from_str("Arts & Entertainment > Event Tickets"),
+            Ok(ProductCategory::ArtsAndEntertainmentEventTickets)
+        );
         assert_eq!(ProductCategory::from_str(
             "Arts & Entertainment > Hobbies & Creative Arts > Musical Instrument & Orchestra Accessories > Woodwind Instrument Accessories > Saxophone Accessories > Saxophone Parts > Saxophone Mouthpieces"),
             Ok(ProductCategory::ArtsAndEntertainmentHobbiesAndCreativeArtsMusicalInstrumentAndOrchestraAccessoriesWoodwindInstrumentAccessoriesSaxophoneAccessoriesSaxophonePartsSaxophoneMouthpieces),
         );
-        assert_eq!(ProductCategory::from_str("Some Nonexistent Category"), Err(Error::NameNotFound));
+        assert_eq!(
+            ProductCategory::from_str("Some Nonexistent Category"),
+            Err(Error::NameNotFound)
+        );
     }
 }
 
