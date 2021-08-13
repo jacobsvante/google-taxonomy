@@ -1,0 +1,108 @@
+name: Main
+
+on: [push]
+
+jobs:
+
+  clippy:
+    name: Check for common code mistakes
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v1
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      -
+        uses: Swatinem/rust-cache@v1.3.0
+      -
+        name: Run clippy
+        run: cargo clippy -- -D warnings
+
+  fmt:
+    name: Check code format
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v1
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      -
+        name: Run rustfmt
+        run: cargo fmt -- --check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      -
+        uses: Swatinem/rust-cache@v1.3.0
+      -
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --release
+      -
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --release --all-features
+
+  cargo-deny:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: EmbarkStudios/cargo-deny-action@v1
+
+  create-release-pr:
+    name: Conditionally create release PR
+    needs: [build, clippy, cargo-deny, test]
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      -
+        name: Create a release Pull Request
+        uses: google-github-actions/release-please-action@v2
+        with:
+          release-type: rust
+          bump-minor-pre-major: true
+
+  publish:
+    name: Conditionally publish to crates.io
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      -
+        uses: google-github-actions/release-please-action@v2
+        id: release
+        with:
+          release-type: rust
+          command: github-release
+      -
+        uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
+      -
+        name: Tag major and minor versions in Git
+        if: ${{ steps.release.outputs.release_created }}
+        run: |-
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git tag -d v${{ steps.release.outputs.major }} || true
+          git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git push origin :v${{ steps.release.outputs.major }} || true
+          git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
+          git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
+          git push origin v${{ steps.release.outputs.major }}
+          git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
