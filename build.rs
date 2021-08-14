@@ -41,12 +41,20 @@ fn write_enum(
     file: &mut BufWriter<File>,
     mut entries: Vec<(u32, String)>,
 ) -> Result<(), std::io::Error> {
+
     // The IDs seem to already be sorted alphabetically, but it's
     // required for our lookups (in lib.rs) to behave right.
     entries.sort_unstable_by(|a, b| a.1.cmp(&b.1));
+
     // Also precalculate the order of the IDs to speed up runtime lookups
-    let mut numerically_sorted = entries.iter().enumerate().map(|(idx, (id, _))| (id, idx)).collect::<Vec<_>>();
+    let mut numerically_sorted = entries
+        .iter()
+        .enumerate()
+        .map(|(idx, (id, _))| (id, idx))
+        .collect::<Vec<_>>();
+
     numerically_sorted.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+
     // Emit the arrays
     writeln!(file, "const DATA: &'static [(u32, &'static str)] = &{:?};", entries)?;
     writeln!(file, "const DATA_SORTED_BY_ID: &'static [(u32, u16)] = &{:?};", numerically_sorted)?;
@@ -54,10 +62,11 @@ fn write_enum(
     // Declare constants for constructing each category
     writeln!(file, "#[allow(non_upper_case_globals)]")?;
     writeln!(file, "impl ProductCategory {{")?;
+    writeln!(file)?;
     for (i, (_, name)) in entries.iter().enumerate() {
         writeln!(
             file,
-            "pub const {}: Self = Self({});",
+            "    pub const {}: Self = Self({});",
             variant_name(name),
             i
         )?;
