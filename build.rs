@@ -56,8 +56,8 @@ fn write_enum(
     numerically_sorted.sort_unstable_by(|a, b| a.0.cmp(&b.0));
 
     // Emit the arrays
-    writeln!(file, "const DATA: &'static [(u32, &'static str)] = &{:?};", entries)?;
-    writeln!(file, "const DATA_SORTED_BY_ID: &'static [(u32, u16)] = &{:?};", numerically_sorted)?;
+    writeln!(file, "const DATA: &'static [(u32, &'static str)] = &{:#?};", entries)?;
+    writeln!(file, "const DATA_SORTED_BY_ID: &'static [(u32, u16)] = &{:#?};", numerically_sorted)?;
 
     // Declare constants for constructing each category
     writeln!(file, "#[allow(non_upper_case_globals)]")?;
