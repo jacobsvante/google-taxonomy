@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.2.2...v0.3.0) (2021-08-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Rename serde feature from `with-serde` to `serde`
+* **!:** In addition to the type change, casting to u32 no longer works, instead the id method has to be used)
+
+### Bug Fixes
+
+* Rename serde feature from `with-serde` to `serde` ([9973c1b](https://www.github.com/jmagnusson/google-taxonomy/commit/9973c1b334673b5781027d5e5f4b837f2742f7a8)), closes [#5](https://www.github.com/jmagnusson/google-taxonomy/issues/5)
+
+
+### Code Refactoring
+
+* **!:** Move from an enum to a struct ([#7](https://www.github.com/jmagnusson/google-taxonomy/issues/7)) ([d09105e](https://www.github.com/jmagnusson/google-taxonomy/commit/d09105e96bc535b5e32af90676b410475e8e51ee))
+
 ### [0.2.2](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.2.1...v0.2.2) (2021-08-13)
 
 
