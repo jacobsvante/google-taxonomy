@@ -37,7 +37,7 @@ fn parse() -> Vec<(u32, String)> {
 }
 
 #[rustfmt::skip]
-fn write_enum(
+fn write_generated(
     file: &mut BufWriter<File>,
     mut entries: Vec<(u32, String)>,
 ) -> Result<(), std::io::Error> {
@@ -76,9 +76,9 @@ fn write_enum(
 }
 
 fn main() -> Result<(), std::io::Error> {
-    let out_path = Path::new(&env::var("OUT_DIR").unwrap()).join("enum.rs");
+    let out_path = Path::new(&env::var("OUT_DIR").unwrap()).join("generated.rs");
     let entries = parse();
     let mut file = BufWriter::new(File::create(&out_path).expect("Couldn't write to output file"));
-    write_enum(&mut file, entries)?;
+    write_generated(&mut file, entries)?;
     Ok(())
 }

@@ -1,19 +1,19 @@
 # Google Taxonomy / Product Categories
 
 The purpose of this crate is to more easily work with [Google Product Categories / Taxonomy](https://support.google.com/merchants/answer/6324436).
-This is provided via the `google_taxonomy::ProductCategory` enum which contains all categories that exist as of 2021-08-13.
+This is provided via the `google_taxonomy::ProductCategory` struct which contains all categories that exist as of 2021-08-13.
 
-## Enum variants, naming & discriminant
+## Associated constants naming
 
-Variant names are translated from the [taxonomy-with-ids.en-US.txt](https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt) file as follows:
-1. The leading ID is removed and used as [discriminant](https://doc.rust-lang.org/reference/items/enumerations.html#custom-discriminant-values-for-fieldless-enumerations) for the enum variant.
+The ProductCategory contains each product category as an associated constant. They are translated from the [taxonomy-with-ids.en-US.txt](https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt) file as follows:
+1. The leading ID is removed (and can be obtained using the `id` method).
 2. The immediately following characters ` - ` are removed
 3. All occurrences of `&` are replaced with `And`
-4. Non-alphanumeric ascii characters are removed
+4. Finally, all non-alphanumeric ascii characters are removed
 
-For example `1604 - Apparel & Accessories > Clothing` becomes `ApparelAndAccessoriesClothing`.
+For example `1604 - Apparel & Accessories > Clothing` becomes `ProductCategory::ApparelAndAccessoriesClothing`.
 
-The discriminant is represented as a `u32` internally.
+Each constant takes up 2 bytes of memory.
 
 ## Examples
 

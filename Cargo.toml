@@ -1,6 +1,6 @@
 [package]
 name = "google_taxonomy"
-description = "Enum with all Google Product Categories / Taxonomy"
+description = "Struct with all Google Product Categories / Taxonomy"
 version = "0.3.0"
 license = "MIT"
 edition = "2018"

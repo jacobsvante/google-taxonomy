@@ -4,7 +4,7 @@ use core::fmt;
 use core::str::FromStr;
 
 // Include the build-script generated mappings
-include!(concat!(env!("OUT_DIR"), "/enum.rs"));
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct ProductCategory(u16);
@@ -194,7 +194,7 @@ mod tests {
     }
 
     #[test]
-    fn id_to_enum() {
+    fn id_to_constant() {
         let cat: ProductCategory = 499972.try_into().unwrap();
         assert_eq!(
             cat,
@@ -203,61 +203,61 @@ mod tests {
     }
 
     #[test]
-    fn id_u8_to_enum() {
+    fn id_u8_to_constant() {
         let cat = ProductCategory::try_from(111_u8).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_u16_to_enum() {
+    fn id_u16_to_constant() {
         let cat = ProductCategory::try_from(111_u16).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_u32_to_enum() {
+    fn id_u32_to_constant() {
         let cat = ProductCategory::try_from(111_u32).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_u64_to_enum() {
+    fn id_u64_to_constant() {
         let cat = ProductCategory::try_from(111_u64).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_usize_to_enum() {
+    fn id_usize_to_constant() {
         let cat = ProductCategory::try_from(111_usize).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_i8_to_enum() {
+    fn id_i8_to_constant() {
         let cat = ProductCategory::try_from(111_i8).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_i16_to_enum() {
+    fn id_i16_to_constant() {
         let cat = ProductCategory::try_from(111_i16).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_i32_to_enum() {
+    fn id_i32_to_constant() {
         let cat = ProductCategory::try_from(111_i32).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_i64_to_enum() {
+    fn id_i64_to_constant() {
         let cat = ProductCategory::try_from(111_i64).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
 
     #[test]
-    fn id_isize_to_enum() {
+    fn id_isize_to_constant() {
         let cat = ProductCategory::try_from(111_isize).unwrap();
         assert_eq!(cat, ProductCategory::BusinessAndIndustrial);
     }
