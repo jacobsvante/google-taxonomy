@@ -35,7 +35,7 @@ impl fmt::Display for ProductCategory {
     }
 }
 
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 use serde::{
     de::{self, Deserializer},
     ser::Serializer,
@@ -154,7 +154,7 @@ impl TryFrom<usize> for ProductCategory {
     }
 }
 
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for ProductCategory {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -165,7 +165,7 @@ impl<'de> Deserialize<'de> for ProductCategory {
     }
 }
 
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 impl Serialize for ProductCategory {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -281,7 +281,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "with-serde")]
+    #[cfg(feature = "serde")]
     fn test_serde_deserialize() {
         let category: ProductCategory = serde_json::from_str(&"\"Baby & Toddler\"").unwrap();
 
@@ -289,7 +289,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "with-serde")]
+    #[cfg(feature = "serde")]
     fn test_serde_serialize() {
         let serialized = serde_json::to_string(&ProductCategory::ApparelAndAccessories).unwrap();
         assert_eq!(serialized, "\"Apparel & Accessories\"");

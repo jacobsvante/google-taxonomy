@@ -42,7 +42,7 @@ assert_eq!(ProductCategory::AnimalsAndPetSuppliesLiveAnimals.to_string(), "Anima
 ### Serialize / deserialize with Serde
 
 ```rust
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 {
     use serde::{Deserialize, Serialize};
     use google_taxonomy::ProductCategory;

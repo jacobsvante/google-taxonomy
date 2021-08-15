@@ -13,7 +13,6 @@ keywords = ["google", "taxonomy"]
 
 [features]
 default = []
-with-serde = ["serde"]
 
 [dependencies]
 serde = { version = "1.0.127", optional = true, features = ["derive"] }
