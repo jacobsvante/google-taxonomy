@@ -273,6 +273,11 @@ mod tests {
     }
 
     #[test]
+    fn size_of_product_category() {
+        assert_eq!(std::mem::size_of_val(&ProductCategory::BusinessAndIndustrial), 2);
+    }
+
+    #[test]
     #[cfg(feature = "with-serde")]
     fn test_serde_deserialize() {
         let category: ProductCategory = serde_json::from_str(&"\"Baby & Toddler\"").unwrap();
