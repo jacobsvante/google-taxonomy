@@ -53,7 +53,7 @@ fn write_enum(
         .map(|(idx, (id, _))| (id, idx))
         .collect::<Vec<_>>();
 
-    numerically_sorted.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+    numerically_sorted.sort_unstable_by(|a, b| a.0.cmp(b.0));
 
     // Emit the arrays
     writeln!(file, "const DATA: &[(u32, &str)] = &{:#?};", entries)?;
