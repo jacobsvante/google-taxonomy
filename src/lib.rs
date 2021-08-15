@@ -274,7 +274,10 @@ mod tests {
 
     #[test]
     fn size_of_product_category() {
-        assert_eq!(std::mem::size_of_val(&ProductCategory::BusinessAndIndustrial), 2);
+        assert_eq!(
+            std::mem::size_of_val(&ProductCategory::BusinessAndIndustrial),
+            2
+        );
     }
 
     #[test]
