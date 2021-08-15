@@ -30,7 +30,7 @@ assert_eq!(cat, ProductCategory::AnimalsAndPetSuppliesLiveAnimals);
 ### Get the number representation of the product category
 ```rust
 use google_taxonomy::ProductCategory;
-assert_eq!(ProductCategory::AnimalsAndPetSuppliesLiveAnimals as u32, 3237);
+assert_eq!(ProductCategory::AnimalsAndPetSuppliesLiveAnimals.id(), 3237);
 ```
 
 ### Get the name of a product category

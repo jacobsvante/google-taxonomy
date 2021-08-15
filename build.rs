@@ -6,27 +6,18 @@ use std::path::Path;
 // From http://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt
 static TAXONOMY_PATH: &str = "taxonomy-with-ids.en-US.txt";
 
-struct RawProductCategory {
-    id: u32,
-    name: String,
+fn variant_name(name: &str) -> String {
+    name.replace("&", "And")
+        .chars()
+        .filter(|&c| c.is_ascii_alphanumeric())
+        .collect()
 }
 
-impl RawProductCategory {
-    fn variant_name(&self) -> String {
-        self.name
-            .replace("&", "And")
-            .chars()
-            .filter(|&c| c.is_ascii_alphanumeric())
-            .collect()
-    }
-}
-
-fn parse() -> Vec<RawProductCategory> {
+fn parse() -> Vec<(u32, String)> {
     let reader = BufReader::new(File::open(TAXONOMY_PATH).expect("Couldn't read data"));
     reader
         .lines()
         .skip(1)
-        // .take(1000)  // NOTE: Can be used to speed up compilation...
         .into_iter()
         .enumerate()
         .map(|(line_no, line)| {
@@ -35,12 +26,12 @@ fn parse() -> Vec<RawProductCategory> {
 
             let columns: Vec<&str> = line.splitn(2, " - ").collect();
 
-            RawProductCategory {
-                id: columns[0]
+            (
+                columns[0]
                     .parse()
                     .unwrap_or_else(|_| panic!("Could not parse id for {}", &line)),
-                name: columns[1].into(),
-            }
+                columns[1].into(),
+            )
         })
         .collect()
 }
@@ -48,58 +39,29 @@ fn parse() -> Vec<RawProductCategory> {
 #[rustfmt::skip]
 fn write_enum(
     file: &mut BufWriter<File>,
-    entries: &[RawProductCategory],
+    mut entries: Vec<(u32, String)>,
 ) -> Result<(), std::io::Error> {
-    writeln!(file, "#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]")?;
-    writeln!(file, "pub enum ProductCategory {{")?;
-    for entry in entries.iter() {
-        writeln!(file, "    {} = {},", &entry.variant_name(), &entry.id)?;
-    }
-    writeln!(file, "}}")?;
-    writeln!(file)?;
+    // The IDs seem to already be sorted alphabetically, but it's
+    // required for our lookups (in lib.rs) to behave right.
+    entries.sort_unstable_by(|a, b| a.1.cmp(&b.1));
+    // Also precalculate the order of the IDs to speed up runtime lookups
+    let mut numerically_sorted = entries.iter().enumerate().map(|(idx, (id, _))| (id, idx)).collect::<Vec<_>>();
+    numerically_sorted.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+    // Emit the arrays
+    writeln!(file, "const DATA: &'static [(u32, &'static str)] = &{:?};", entries)?;
+    writeln!(file, "const DATA_SORTED_BY_ID: &'static [(u32, u16)] = &{:?};", numerically_sorted)?;
+
+    // Declare constants for constructing each category
+    writeln!(file, "#[allow(non_upper_case_globals)]")?;
     writeln!(file, "impl ProductCategory {{")?;
-    writeln!(file, "    pub fn from_id(id: u32) -> Result<Self, Error> {{")?;
-    writeln!(file, "        match id {{")?;
-    for entry in entries.iter() {
+    for (i, (_, name)) in entries.iter().enumerate() {
         writeln!(
             file,
-            "            {} => Ok(Self::{}),",
-            entry.id,
-            entry.variant_name()
+            "pub const {}: Self = Self({});",
+            variant_name(name),
+            i
         )?;
     }
-    writeln!(file, "            _ => Err(Error::IdNotFound)")?;
-    writeln!(file, "        }}")?;
-    writeln!(file, "    }}")?;
-    writeln!(file)?;
-    writeln!(file, "    pub fn from_name(name: &str) -> Result<Self, Error> {{")?;
-    writeln!(file, "        match name {{")?;
-    for entry in entries.iter() {
-        writeln!(
-            file,
-            "            \"{}\" => Ok(Self::{}),",
-            entry.name,
-            entry.variant_name()
-        )?;
-    }
-    writeln!(file, "            _ => Err(Error::NameNotFound)")?;
-    writeln!(file, "        }}")?;
-    writeln!(file, "    }}")?;
-    writeln!(file, "}}")?;
-    writeln!(file, "impl fmt::Display for ProductCategory {{")?;
-    writeln!(file, "    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {{")?;
-    writeln!(file, "        let x = match self {{")?;
-    for entry in entries.iter() {
-        writeln!(
-            file,
-            "            Self::{} => \"{}\",",
-            &entry.variant_name(),
-            &entry.name
-        )?;
-    }
-    writeln!(file, "        }};")?;
-    writeln!(file, "        write!(f, \"{{}}\", x)")?;
-    writeln!(file, "    }}")?;
     writeln!(file, "}}")?;
     Ok(())
 }
@@ -108,6 +70,6 @@ fn main() -> Result<(), std::io::Error> {
     let out_path = Path::new(&env::var("OUT_DIR").unwrap()).join("enum.rs");
     let entries = parse();
     let mut file = BufWriter::new(File::create(&out_path).expect("Couldn't write to output file"));
-    write_enum(&mut file, &entries)?;
+    write_enum(&mut file, entries)?;
     Ok(())
 }
