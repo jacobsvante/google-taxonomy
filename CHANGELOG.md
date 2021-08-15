@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.3.0...v0.3.1) (2021-08-15)
+
+
+### Documentation
+
+* Reflect change from enum to struct in documentation ([a8d8d89](https://www.github.com/jmagnusson/google-taxonomy/commit/a8d8d897bf4730a2dbddcad9e2b393dfa522d37f))
+
 ## [0.3.0](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.2.2...v0.3.0) (2021-08-15)
 
 
