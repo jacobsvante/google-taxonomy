@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.2](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.3.1...v0.3.2) (2021-08-27)
+
+
+### Bug Fixes
+
+* Remove unnecessary doc-comment crate ([b87fbbf](https://www.github.com/jmagnusson/google-taxonomy/commit/b87fbbf8a41f4dde0b1921daf0804d9665fde67c))
+
 ### [0.3.1](https://www.github.com/jmagnusson/google-taxonomy/compare/v0.3.0...v0.3.1) (2021-08-15)
 
 
