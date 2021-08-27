@@ -316,8 +316,3 @@ mod tests {
         );
     }
 }
-
-#[cfg(doctest)]
-use doc_comment::doctest;
-#[cfg(doctest)]
-doc_comment::doctest!("../README.md");
